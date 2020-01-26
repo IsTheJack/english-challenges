@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8d0cc7cfe0149a88a9ab30e33a857385",
+    "revision": "8660444179fef42cff0d82e55f09f335",
     "url": "/english-challenges/index.html"
   },
   {
-    "revision": "09f67d958065f2d27820",
+    "revision": "9cfdfbb4077458b8fe2b",
     "url": "/english-challenges/static/css/main.60149286.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/english-challenges/static/js/2.2e7b9073.chunk.js.LICENSE"
   },
   {
-    "revision": "09f67d958065f2d27820",
-    "url": "/english-challenges/static/js/main.d93b449b.chunk.js"
+    "revision": "9cfdfbb4077458b8fe2b",
+    "url": "/english-challenges/static/js/main.f6f27f01.chunk.js"
   },
   {
     "revision": "7d415e21e23543e8cb2c",
