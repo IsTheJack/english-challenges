@@ -1,42 +1,52 @@
-.app {
+.app__main-actions-container {
   display: flex;
-  color: #fff;
-  min-height: 100vh;
-  background-color: rgb(24, 29, 34);
-}
-
-.btn-default {
-  padding: 10px 40px;
-  font-size: 1.2rem;
-  border-radius: 15px;
-  display: block;
-  margin-top: 30px;
-}
-
-.main-column {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
 }
 
-.history-column {
-  width: 350px;
+.app__body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.link {
-  color: #fff;
-  margin-bottom: 30px;
+.app__home-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-.history-column {
-  border-left: 1px solid #fff;
-  max-height: 100vh;
-  overflow-y: scroll;
-  padding: 10px 30px;
+.app__main-actions-container > button:first-of-type {
+  margin-bottom: 2rem;
 }
 
-.history-title {
+.app__work-actions {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-bottom: 2rem;
+}
+
+.app__services-links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app__services-links a {
+  margin-bottom: 2rem;
+}
+
+.app__current-word {
+  font-size: 2.5em;
   text-align: center;
+  text-transform: capitalize;
+  font-weight: 300;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.app__review-buttons-container {
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 2rem;
 }

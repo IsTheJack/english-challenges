@@ -1,0 +1,11 @@
+.app-template {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-template__body {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}

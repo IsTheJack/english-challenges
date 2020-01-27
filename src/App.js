@@ -2,12 +2,16 @@ import React from 'react';
 import Timeline from "react-time-line";
 import moment from 'moment'
 
+import { Button, AppBar, Typography, Toolbar, Fab } from "@material-ui/core";
+import { Done as DoneIcon, ThumbDown, ThumbUp } from "@material-ui/icons";
+
 import './App.css';
 
 import getRandomSentence from './helpers/getRandomSentence'
 import words from './assets/json/words.json'
 
 import { difference, get, cloneDeep } from "lodash";
+import AppTemplate from './components/AppTemplate';
 
 const reviewLogic = [0, 1, 3, 7, 15, 30, 45, 60, 90, 120, 365, 546, 720]
 
@@ -51,7 +55,7 @@ function App() {
   const changeRandomSentence = () => {
     setRandomWord(getRandomSentence(availableWords))
   }
-  
+
   const changeRandomWordToReview = () => {
     setRandomWordToReview(getRandomSentence(wordsToReview));
   }
@@ -78,7 +82,7 @@ function App() {
       return setStudiedWords(JSON.parse(localStorage.getItem(studiedWordsKey)))
     }
   }, [studiedWords])
-  
+
   React.useEffect(() => {
     if (!wordsToReview.length) {
       setIsReviewMode(false)
@@ -95,7 +99,7 @@ function App() {
 
     setStudiedWords(newStudiedWordsObj);
   }
-  
+
   const resetReviewWord = wordObj => {
     const wordIndex = wordObj.studiedWordsIndexItem;
     const newStudiedWordsObj = cloneDeep(studiedWords);
@@ -106,139 +110,191 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <div className="main-column">
-        {!!availableWords.length && !isReviewMode && (
-          <>
-            {!!wordsToReview.length && (
-              <button
-                onClick={() => {
-                  setIsReviewMode(true);
-                  changeRandomWordToReview();
-                }}
-                className="btn-default"
-              >
-                Review ({wordsToReview.length})
-              </button>
+    <AppTemplate>
+      {(pageIndex) => {
+        return (
+          <div className="app__body">
+            <AppBar position="fixed">
+              <Toolbar variant="dense">
+                <Typography variant="h6" color="inherit">
+                  {pageIndex === 0 ? "Home" : "History"}
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Toolbar />
+            {pageIndex === 0 && (
+              <div className="app__home-container">
+                {!!availableWords.length && !isReviewMode && (
+                  <>
+                    <div className="app__main-actions-container">
+                      <Button
+                        onClick={changeRandomSentence}
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                      >
+                        Get Random Word
+                      </Button>
+
+                      {!!wordsToReview.length && (
+                        <Button
+                          onClick={() => {
+                            setIsReviewMode(true);
+                            changeRandomWordToReview();
+                          }}
+                          color="secondary"
+                          variant="contained"
+                          size="large"
+                        >
+                          Review ({wordsToReview.length})
+                        </Button>
+                      )}
+                    </div>
+
+                    <h1 className="app__current-word">{randomWord}</h1>
+
+                    {randomWord && (
+                      <div className="app__work-actions">
+                        <div className="app__services-links">
+                          <Button
+                            className="link"
+                            href={`https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text=${randomWord}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            variant="contained"
+                          >
+                            See google translate
+                          </Button>
+
+                          <Button
+                            className="link"
+                            href={`https://context.reverso.net/traducao/ingles-portugues/${randomWord}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            variant="contained"
+                          >
+                            See Reverso definitions
+                          </Button>
+
+                          <Button
+                            className="link"
+                            href={`https://www.wordreference.com/enpt/${randomWord}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            variant="contained"
+                          >
+                            See Word Reference definitions
+                          </Button>
+                        </div>
+
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="large"
+                          startIcon={<DoneIcon />}
+                          onClick={() => checkWordAsStudied(randomWord)}
+                        >
+                          Mark as studied
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {!!wordsToReview.length && isReviewMode && (
+                  <div className="main-column">
+                    <h1 className="app__current-word">
+                      {get(randomWordToReview, "word")}
+                    </h1>
+
+                    {get(randomWordToReview, "word") && (
+                      <>
+                        <div className="app__services-links">
+                          <div className="app__services-links">
+                            <Button
+                              className="link"
+                              href={`https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text=${get(
+                                randomWordToReview,
+                                "word"
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              variant="contained"
+                            >
+                              See google translate
+                            </Button>
+
+                            <Button
+                              className="link"
+                              href={`https://context.reverso.net/traducao/ingles-portugues/${get(
+                                randomWordToReview,
+                                "word"
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              variant="contained"
+                            >
+                              See Reverso definitions
+                            </Button>
+
+                            <Button
+                              className="link"
+                              href={`https://www.wordreference.com/enpt/${get(
+                                randomWordToReview,
+                                "word"
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              variant="contained"
+                            >
+                              See Word Reference definitions
+                            </Button>
+                          </div>
+                        </div>
+
+                        <div className="app__review-buttons-container">
+                          <Fab
+                            onClick={() => reviewWord(randomWordToReview)}
+                            color="primary"
+                            aria-label="add"
+                            className="app__review-buttons"
+                          >
+                            <ThumbUp />
+                          </Fab>
+
+                          <Fab
+                            onClick={() => resetReviewWord(randomWordToReview)}
+                            color="secondary"
+                            aria-label="add"
+                            className="app__review-buttons"
+                          >
+                            <ThumbDown />
+                          </Fab>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {!availableWords.length && (
+                  <>
+                    <h1>Congratulations!</h1>
+                    <h2>You finished the challenge</h2>
+                  </>
+                )}
+              </div>
             )}
-
-            <button onClick={changeRandomSentence} className="btn-default">
-              Get Random Word
-            </button>
-
-            <h1>{randomWord}</h1>
-
-            {randomWord && (
-              <>
-                <a
-                  className="link"
-                  href={`https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text=${randomWord}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  See google translate
-                </a>
-
-                <a
-                  className="link"
-                  href={`https://context.reverso.net/traducao/ingles-portugues/${randomWord}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  See Reverso definitions
-                </a>
-
-                <a
-                  className="link"
-                  href={`https://www.wordreference.com/enpt/${randomWord}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  See Word Reference definitions
-                </a>
-
-                <button onClick={() => checkWordAsStudied(randomWord)}>
-                  Mark as studied
-                </button>
-              </>
-            )}
-          </>
-        )}
-
-        {!!wordsToReview.length && isReviewMode && (
-          <div className="main-column">
-            <h1>{get(randomWordToReview, "word")}</h1>
-
-            {get(randomWordToReview, "word") && (
-              <>
-                <a
-                  className="link"
-                  href={`https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text=${get(
-                    randomWordToReview,
-                    "word"
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  See google translate
-                </a>
-
-                <a
-                  className="link"
-                  href={`https://context.reverso.net/traducao/ingles-portugues/${get(
-                    randomWordToReview,
-                    "word"
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  See Reverso definitions
-                </a>
-
-                <a
-                  className="link"
-                  href={`https://www.wordreference.com/enpt/${get(
-                    randomWordToReview,
-                    "word"
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  See Word Reference definitions
-                </a>
-
+            {pageIndex === 1 && (
+              <div>
                 <div>
-                  <button onClick={() => reviewWord(randomWordToReview)}>
-                    I know this word
-                  </button>
-
-                  <button onClick={() => resetReviewWord(randomWordToReview)}>
-                    I don't know this word
-                  </button>
+                  <Timeline items={events} />
                 </div>
-              </>
+              </div>
             )}
           </div>
-        )}
-
-        {!availableWords.length && (
-          <>
-            <h1>Congratulations!</h1>
-            <h2>You finished the challenge</h2>
-          </>
-        )}
-      </div>
-
-      <div className="history-column">
-        <h1 className="history-title">
-          History <small>({studiedWords.length})</small>
-        </h1>
-
-        <div>
-          <Timeline items={events} />
-        </div>
-      </div>
-    </div>
+        );
+      }}
+    </AppTemplate>
   );
 }
 
