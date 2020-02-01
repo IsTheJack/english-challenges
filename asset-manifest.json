@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/english-challenges/static/css/main.037cf0ad.chunk.css",
-    "main.js": "/english-challenges/static/js/main.e3e3e1f9.chunk.js",
-    "main.js.map": "/english-challenges/static/js/main.e3e3e1f9.chunk.js.map",
+    "main.js": "/english-challenges/static/js/main.0b4a6b1c.chunk.js",
+    "main.js.map": "/english-challenges/static/js/main.0b4a6b1c.chunk.js.map",
     "runtime-main.js": "/english-challenges/static/js/runtime-main.90e41267.js",
     "runtime-main.js.map": "/english-challenges/static/js/runtime-main.90e41267.js.map",
     "static/js/2.1d30820c.chunk.js": "/english-challenges/static/js/2.1d30820c.chunk.js",
     "static/js/2.1d30820c.chunk.js.map": "/english-challenges/static/js/2.1d30820c.chunk.js.map",
     "index.html": "/english-challenges/index.html",
-    "precache-manifest.7b43556bd83a144a63b8dc35bd56cbdd.js": "/english-challenges/precache-manifest.7b43556bd83a144a63b8dc35bd56cbdd.js",
+    "precache-manifest.dec190a17c5eafe21089063e2b83df40.js": "/english-challenges/precache-manifest.dec190a17c5eafe21089063e2b83df40.js",
     "service-worker.js": "/english-challenges/service-worker.js",
     "static/css/main.037cf0ad.chunk.css.map": "/english-challenges/static/css/main.037cf0ad.chunk.css.map",
     "static/js/2.1d30820c.chunk.js.LICENSE": "/english-challenges/static/js/2.1d30820c.chunk.js.LICENSE"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.90e41267.js",
     "static/js/2.1d30820c.chunk.js",
     "static/css/main.037cf0ad.chunk.css",
-    "static/js/main.e3e3e1f9.chunk.js"
+    "static/js/main.0b4a6b1c.chunk.js"
   ]
 }
