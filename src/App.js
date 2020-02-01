@@ -2,13 +2,32 @@ import React from 'react';
 import Timeline from "react-time-line";
 import moment from 'moment'
 
-import { Button, AppBar, Typography, Toolbar, Fab } from "@material-ui/core";
-import { Done as DoneIcon, ThumbDown, ThumbUp } from "@material-ui/icons";
+import {
+  Button,
+  AppBar,
+  Typography,
+  Toolbar,
+  Fab,
+  Chip,
+  Modal,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails
+} from "@material-ui/core";
+
+import {
+  Done as DoneIcon,
+  ThumbDown,
+  ThumbUp,
+  Close as CloseIcon,
+  ExpandMore as ExpandMoreIcon
+} from "@material-ui/icons";
 
 import './App.css';
 
 import getRandomSentence from './helpers/getRandomSentence'
 import words from './assets/json/words.json'
+import wordsDefinitions from './assets/json/words-definitions.json'
 
 import { difference, get, cloneDeep } from "lodash";
 import AppTemplate from './components/AppTemplate';
@@ -20,16 +39,22 @@ function App() {
   const [randomWordToReview, setRandomWordToReview] = React.useState(undefined)
   const [studiedWords, setStudiedWords] = React.useState([])
   const [isReviewMode, setIsReviewMode] = React.useState(false)
+  const [isExampleModalOpened, setIsExampleModalOpened] = React.useState(false)
+  const [isOnline, setIsOnline] = React.useState(!!navigator.onLine)
   const studiedWordsNames = studiedWords.map(studiedWord => studiedWord.word)
   const availableWords = difference(words, studiedWordsNames)
 
+  const handleConnection = () => {
+    console.log('call')
+    return setIsOnline(!!navigator.onLine)
+  }
+
+  React.useEffect(() => {
+    window.addEventListener('online', handleConnection);
+    window.addEventListener('offline', handleConnection);
+  }, [])
+
   const getWordsToReview = () => {
-    // Filtrar as palavras estudadas
-    // Comparar a data de primeiro estudo usando a lógica de revisão com a data atual
-    // - Data de primeiro estudo + lógica de revisão (em dias) tem que ser menor que a data atual
-
-    // Retornar todas as palavras que respeitem essa regra
-
     return studiedWords
       .map((studiedWord, index) => ({ ...studiedWord, studiedWordsIndexItem: index }))
       .filter(studiedWord => {
@@ -86,7 +111,8 @@ function App() {
   React.useEffect(() => {
     if (!wordsToReview.length) {
       setIsReviewMode(false)
-    } else {
+      setRandomWordToReview(undefined);
+    } else if (isReviewMode) {
       changeRandomWordToReview()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,12 +124,14 @@ function App() {
     newStudiedWordsObj[wordIndex].logicIndex += 1;
 
     setStudiedWords(newStudiedWordsObj);
+    changeRandomWordToReview();
   }
 
   const resetReviewWord = wordObj => {
     const wordIndex = wordObj.studiedWordsIndexItem;
     const newStudiedWordsObj = cloneDeep(studiedWords);
     newStudiedWordsObj[wordIndex].logicIndex = 0;
+    newStudiedWordsObj[wordIndex].firstStudyDate = Date.now();
 
     setStudiedWords(newStudiedWordsObj);
     changeRandomWordToReview();
@@ -153,38 +181,58 @@ function App() {
 
                     <h1 className="app__current-word">{randomWord}</h1>
 
+                    <div>
+                      <div className="app__word-types">
+                        {(wordsDefinitions[randomWord]?.wordTypes || []).map(type => (
+                          <Chip label={type} variant="outlined" />
+                        ))}
+                      </div>
+                    </div>
+
                     {randomWord && (
                       <div className="app__work-actions">
                         <div className="app__services-links">
                           <Button
                             className="link"
-                            href={`https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text=${randomWord}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            onClick={() => setIsExampleModalOpened(true)}
                             variant="contained"
                           >
-                            See google translate
+                            See Examples
                           </Button>
+                          
+                          {isOnline && (
+                            <>
+                              <Button
+                                className="link"
+                                href={`https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text=${randomWord}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="contained"
+                              >
+                                See google translate
+                              </Button>
 
-                          <Button
-                            className="link"
-                            href={`https://context.reverso.net/traducao/ingles-portugues/${randomWord}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            variant="contained"
-                          >
-                            See Reverso definitions
-                          </Button>
+                              <Button
+                                className="link"
+                                href={`https://context.reverso.net/traducao/ingles-portugues/${randomWord}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="contained"
+                              >
+                                See Reverso definitions
+                              </Button>
 
-                          <Button
-                            className="link"
-                            href={`https://www.wordreference.com/enpt/${randomWord}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            variant="contained"
-                          >
-                            See Word Reference definitions
-                          </Button>
+                              <Button
+                                className="link"
+                                href={`https://www.wordreference.com/enpt/${randomWord}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="contained"
+                              >
+                                See Word Reference definitions
+                              </Button>
+                            </>
+                          )}
                         </div>
 
                         <Button
@@ -213,42 +261,54 @@ function App() {
                           <div className="app__services-links">
                             <Button
                               className="link"
-                              href={`https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text=${get(
-                                randomWordToReview,
-                                "word"
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                              onClick={() => setIsExampleModalOpened(true)}
                               variant="contained"
                             >
-                              See google translate
+                              See Examples
                             </Button>
 
-                            <Button
-                              className="link"
-                              href={`https://context.reverso.net/traducao/ingles-portugues/${get(
-                                randomWordToReview,
-                                "word"
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              variant="contained"
-                            >
-                              See Reverso definitions
-                            </Button>
+                            {isOnline && (
+                              <>
+                                <Button
+                                  className="link"
+                                  href={`https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text=${get(
+                                    randomWordToReview,
+                                    "word"
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  variant="contained"
+                                >
+                                  See google translate
+                                </Button>
 
-                            <Button
-                              className="link"
-                              href={`https://www.wordreference.com/enpt/${get(
-                                randomWordToReview,
-                                "word"
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              variant="contained"
-                            >
-                              See Word Reference definitions
-                            </Button>
+                                <Button
+                                  className="link"
+                                  href={`https://context.reverso.net/traducao/ingles-portugues/${get(
+                                    randomWordToReview,
+                                    "word"
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  variant="contained"
+                                >
+                                  See Reverso definitions
+                                </Button>
+
+                                <Button
+                                  className="link"
+                                  href={`https://www.wordreference.com/enpt/${get(
+                                    randomWordToReview,
+                                    "word"
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  variant="contained"
+                                >
+                                  See Word Reference definitions
+                                </Button>
+                              </>
+                            )}
                           </div>
                         </div>
 
@@ -282,6 +342,47 @@ function App() {
                     <h2>You finished the challenge</h2>
                   </>
                 )}
+
+                <Modal
+                  aria-labelledby="simple-modal-title"
+                  aria-describedby="simple-modal-description"
+                  open={isExampleModalOpened}
+                  onClose={() => setIsExampleModalOpened(false)}
+                >
+                  <div className="app__modal-body">
+                    <div className="app__modal-body-title">Examples:</div>
+                    
+                    <div className="app__modal-close-button">
+                      <Fab
+                        onClick={() => setIsExampleModalOpened(false)}
+                        color="primary"
+                        aria-label="close"
+                        size="small"
+                      >
+                        <CloseIcon />
+                      </Fab>
+                    </div>
+
+                    <div>
+                      {(wordsDefinitions[randomWordToReview?.word || randomWord]?.phrases || []).map(([originalPhrase, translatedPhrase], i) => (
+                        <ExpansionPanel key={i}>
+                          <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                          >
+                            <Typography className="app__sentence-example" dangerouslySetInnerHTML={{__html: originalPhrase}} />
+                          </ExpansionPanelSummary>
+                          <ExpansionPanelDetails>
+                            <Typography>
+                              {translatedPhrase}
+                            </Typography>
+                          </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                      ))}
+                    </div>
+                  </div>
+                </Modal>
               </div>
             )}
             {pageIndex === 1 && (

@@ -22,17 +22,15 @@
 .app__work-actions {
   display: flex;
   flex-direction: column;
-  flex: 1;
   margin-bottom: 2rem;
 }
 
 .app__services-links {
-  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.app__services-links a {
+.app__services-links .link {
   margin-bottom: 2rem;
 }
 
@@ -41,12 +39,50 @@
   text-align: center;
   text-transform: capitalize;
   font-weight: 300;
-  margin-top: 2em;
+  margin-top: .5em;
+}
+
+.app__word-types {
+  display: flex;
+  justify-content: center;
   margin-bottom: 2em;
+}
+
+.app__word-types > div {
+  margin: 0 20px;
 }
 
 .app__review-buttons-container {
   display: flex;
   justify-content: space-around;
   padding-bottom: 2rem;
+}
+
+.app__modal-body {
+  position: relative;
+  background: #fafafa;
+  width: 90%;
+  height: 90%;
+  margin: 0 auto;
+  overflow-y: auto;
+  margin-top: 10%;
+  padding: 10px;
+}
+
+.app__modal-body-title {
+  font-size: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 7px 0;
+  margin-bottom: 15px;
+}
+
+.app__modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+}
+
+.app__sentence-example em {
+  color: red;
 }
