@@ -45,7 +45,6 @@ function App() {
   const availableWords = difference(words, studiedWordsNames)
 
   const handleConnection = () => {
-    console.log('call')
     return setIsOnline(!!navigator.onLine)
   }
 
@@ -72,10 +71,12 @@ function App() {
   const wordsToReview = getWordsToReview()
 
   // ts and text
-  const events = studiedWords.map(studiedWord => ({
-    ts: moment(studiedWord.firstStudyDate).toISOString(),
-    text: studiedWord.word
-  }));
+  const events = [...studiedWords]
+    .sort((a, b) => b.firstStudyDate - a.firstStudyDate)
+    .map(studiedWord => ({
+      ts: moment(studiedWord.firstStudyDate).toISOString(),
+      text: studiedWord.word
+    }));
 
   const changeRandomSentence = () => {
     setRandomWord(getRandomSentence(availableWords))
@@ -199,7 +200,7 @@ function App() {
                           >
                             See Examples
                           </Button>
-                          
+
                           {isOnline && (
                             <>
                               <Button
@@ -351,7 +352,7 @@ function App() {
                 >
                   <div className="app__modal-body">
                     <div className="app__modal-body-title">Examples:</div>
-                    
+
                     <div className="app__modal-close-button">
                       <Fab
                         onClick={() => setIsExampleModalOpened(false)}
